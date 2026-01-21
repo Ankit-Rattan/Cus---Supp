@@ -78,18 +78,6 @@ const DominoTileIcon = ({ size = 24 }) => (
   </svg>
 );
 
-// Decorative Pizza Slice
-const PizzaSlice = ({ style }) => (
-  <svg style={style} width="60" height="60" viewBox="0 0 60 60" fill="none">
-    <path d="M30 5C20 5 12 10 8 18L30 55L52 18C48 10 40 5 30 5Z" fill="#FFB347" stroke="#E31837" strokeWidth="2"/>
-    <circle cx="25" cy="20" r="4" fill="#E31837"/>
-    <circle cx="35" cy="25" r="4" fill="#E31837"/>
-    <circle cx="28" cy="35" r="4" fill="#E31837"/>
-    <circle cx="22" cy="28" r="2.5" fill="#4CAF50"/>
-    <circle cx="38" cy="18" r="2.5" fill="#4CAF50"/>
-  </svg>
-);
-
 export default function CustomerSupportPage() {
   const [text, setText] = useState('');
   const [messages, setMessages] = useState([]);
@@ -163,19 +151,26 @@ export default function CustomerSupportPage() {
 
   return (
     <div style={styles.page}>
-      {/* Background Pattern */}
-      <div style={styles.bgPattern}>
-        {/* Red Section */}
-        <div style={styles.redSection}>
-          <PizzaSlice style={{ position: 'absolute', top: '20%', left: '10%', opacity: 0.2, transform: 'rotate(-20deg)' }} />
-          <PizzaSlice style={{ position: 'absolute', bottom: '30%', right: '15%', opacity: 0.15, transform: 'rotate(25deg) scale(0.8)' }} />
-        </div>
-        {/* Blue Section */}
-        <div style={styles.blueSection}>
-          <PizzaSlice style={{ position: 'absolute', top: '30%', right: '10%', opacity: 0.15, transform: 'rotate(15deg)' }} />
-          <PizzaSlice style={{ position: 'absolute', bottom: '20%', left: '20%', opacity: 0.2, transform: 'rotate(-30deg) scale(0.7)' }} />
-        </div>
-            </div>
+      {/* Background Image */}
+      <div style={styles.bgImageWrapper}>
+        <Image
+          src="/pizza-bg.jpg"
+          alt="Background"
+          fill
+          style={{ objectFit: 'cover' }}
+          priority
+        />
+      </div>
+
+      {/* Gradient Overlay with Circular Shades */}
+      <div style={styles.gradientOverlay}>
+        {/* Circular gradient shapes */}
+        <div style={styles.circle1} />
+        <div style={styles.circle2} />
+        <div style={styles.circle3} />
+        <div style={styles.circle4} />
+        <div style={styles.circle5} />
+      </div>
 
       {/* Main Container */}
       <div style={styles.container}>
@@ -224,9 +219,11 @@ export default function CustomerSupportPage() {
                     <span>Start Call</span>
                   </button>
                   <p style={styles.note}>🎧 Ensure microphone is enabled</p>
-          </div>
-        ) : (
+                </div>
+              ) : (
                 <div style={styles.activeCallScreen}>
+                  <div style={styles.callCircle1} />
+                  <div style={styles.callCircle2} />
                   <div style={styles.agentAvatarLarge}>
                     <HeadsetIcon size={50} />
                     <div style={styles.avatarRing} />
@@ -247,7 +244,7 @@ export default function CustomerSupportPage() {
                   <button style={styles.endCallBtn} onClick={endCall}>
                     <EndCallIcon />
                     <span>End Call</span>
-              </button>
+                  </button>
                 </div>
               )}
             </div>
@@ -264,7 +261,7 @@ export default function CustomerSupportPage() {
                     </div>
                   </div>
                 </div>
-            </div>
+              </div>
 
               {messages.length === 0 ? (
                 <div style={styles.welcomeSection}>
@@ -273,8 +270,8 @@ export default function CustomerSupportPage() {
                   <p style={styles.welcomeText}>How can we help you today?</p>
                 </div>
               ) : (
-            <div style={styles.chat}>
-              {messages.map((m, i) => (
+                <div style={styles.chat}>
+                  {messages.map((m, i) => (
                     <div key={i} style={{ ...styles.messageRow, justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
                       {m.role === 'agent' && <div style={styles.agentAvatarSmall}><DominoTileIcon size={18} /></div>}
                       <div style={m.role === 'user' ? styles.userBubble : styles.agentBubble}>{m.text}</div>
@@ -284,20 +281,20 @@ export default function CustomerSupportPage() {
                 </div>
               )}
 
-            <div style={styles.inputBar}>
-              <input
-                value={text}
+              <div style={styles.inputBar}>
+                <input
+                  value={text}
                   placeholder="Describe your issue..."
-                onChange={(e) => setText(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && sendText()}
-                style={styles.input}
-              />
+                  onChange={(e) => setText(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && sendText()}
+                  style={styles.input}
+                />
                 <button style={{ ...styles.sendBtn, opacity: text.trim() ? 1 : 0.5 }} onClick={sendText} disabled={!text.trim()}>
                   <SendIcon />
-              </button>
-            </div>
-          </>
-        )}
+                </button>
+              </div>
+            </>
+          )}
         </main>
 
         {/* Footer */}
@@ -324,25 +321,79 @@ const styles = {
     fontFamily: "'Nunito', 'Rubik', sans-serif",
   },
 
-  bgPattern: {
+  bgImageWrapper: {
     position: 'fixed',
     inset: 0,
-    display: 'flex',
     zIndex: 0,
   },
 
-  redSection: {
-    flex: 1,
-    background: 'linear-gradient(180deg, #E31837 0%, #C41230 100%)',
-    position: 'relative',
-    overflow: 'hidden',
+  gradientOverlay: {
+    position: 'fixed',
+    inset: 0,
+    zIndex: 1,
+    background: `linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(240, 248, 255, 0.92) 30%,
+      rgba(0, 100, 145, 0.88) 70%,
+      rgba(0, 74, 110, 0.92) 100%
+    )`,
   },
 
-  blueSection: {
-    flex: 1,
-    background: 'linear-gradient(180deg, #006491 0%, #004A6E 100%)',
-    position: 'relative',
-    overflow: 'hidden',
+  // Circular gradient shapes
+  circle1: {
+    position: 'absolute',
+    width: '600px',
+    height: '600px',
+    borderRadius: '50%',
+    background: 'radial-gradient(circle, rgba(0, 100, 145, 0.3) 0%, transparent 70%)',
+    top: '-200px',
+    right: '-100px',
+    animation: 'float 8s ease-in-out infinite',
+  },
+
+  circle2: {
+    position: 'absolute',
+    width: '400px',
+    height: '400px',
+    borderRadius: '50%',
+    background: 'radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%)',
+    bottom: '-100px',
+    left: '-50px',
+    animation: 'float 10s ease-in-out infinite reverse',
+  },
+
+  circle3: {
+    position: 'absolute',
+    width: '300px',
+    height: '300px',
+    borderRadius: '50%',
+    background: 'radial-gradient(circle, rgba(0, 100, 145, 0.2) 0%, transparent 70%)',
+    top: '40%',
+    left: '10%',
+    animation: 'float 12s ease-in-out infinite',
+  },
+
+  circle4: {
+    position: 'absolute',
+    width: '500px',
+    height: '500px',
+    borderRadius: '50%',
+    background: 'radial-gradient(circle, rgba(227, 24, 55, 0.1) 0%, transparent 70%)',
+    bottom: '20%',
+    right: '5%',
+    animation: 'float 15s ease-in-out infinite reverse',
+  },
+
+  circle5: {
+    position: 'absolute',
+    width: '250px',
+    height: '250px',
+    borderRadius: '50%',
+    background: 'radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, transparent 70%)',
+    top: '20%',
+    left: '60%',
+    animation: 'float 9s ease-in-out infinite',
   },
 
   container: {
@@ -359,34 +410,36 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 4,
-    filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.3))',
+    gap: 6,
+    filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.2))',
   },
 
   tagline: {
-    color: '#fff',
+    color: '#006491',
     fontSize: 'clamp(14px, 3.5vw, 16px)',
-    fontWeight: 700,
+    fontWeight: 800,
     textTransform: 'uppercase',
     letterSpacing: '3px',
-    textShadow: '0 2px 10px rgba(0,0,0,0.3)',
+    textShadow: '0 1px 2px rgba(255,255,255,0.8)',
   },
 
   card: {
-    background: '#fff',
+    background: 'rgba(255, 255, 255, 0.98)',
     borderRadius: 'clamp(20px, 5vw, 28px)',
-    boxShadow: '0 30px 60px rgba(0, 0, 0, 0.3)',
+    boxShadow: '0 30px 60px rgba(0, 100, 145, 0.2), 0 10px 30px rgba(0, 0, 0, 0.1)',
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
     minHeight: 'clamp(500px, 65vh, 580px)',
+    backdropFilter: 'blur(20px)',
+    border: '1px solid rgba(255, 255, 255, 0.5)',
   },
 
   modeSwitcher: {
     display: 'flex',
     padding: '14px',
     gap: '10px',
-    background: '#f8f9fa',
+    background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)',
   },
 
   modeBtn: {
@@ -399,29 +452,32 @@ const styles = {
     borderRadius: 16,
     border: 'none',
     background: '#fff',
-    color: '#666',
+    color: '#64748b',
     fontSize: 'clamp(15px, 3.8vw, 17px)',
     fontWeight: 800,
     fontFamily: "'Nunito', sans-serif",
     cursor: 'pointer',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   },
 
   modeBtnActiveBlue: {
-    background: 'linear-gradient(135deg, #006491 0%, #004A6E 100%)',
+    background: 'linear-gradient(135deg, #006491 0%, #0088c2 100%)',
     color: '#fff',
-    boxShadow: '0 6px 20px rgba(0, 100, 145, 0.4)',
+    boxShadow: '0 8px 25px rgba(0, 100, 145, 0.35)',
+    transform: 'translateY(-2px)',
   },
 
   modeBtnActiveRed: {
-    background: 'linear-gradient(135deg, #E31837 0%, #C41230 100%)',
+    background: 'linear-gradient(135deg, #E31837 0%, #ff3d5a 100%)',
     color: '#fff',
-    boxShadow: '0 6px 20px rgba(227, 24, 55, 0.4)',
+    boxShadow: '0 8px 25px rgba(227, 24, 55, 0.35)',
+    transform: 'translateY(-2px)',
   },
 
   chatHeader: {
     padding: 'clamp(14px, 3.5vw, 18px) clamp(18px, 4.5vw, 24px)',
-    background: 'linear-gradient(135deg, #E31837 0%, #C41230 100%)',
+    background: 'linear-gradient(135deg, #006491 0%, #0077a8 100%)',
   },
 
   headerLeft: {
@@ -439,6 +495,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     color: '#fff',
+    boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
   },
 
   headerTitle: {
@@ -473,40 +530,40 @@ const styles = {
     justifyContent: 'center',
     padding: 'clamp(28px, 6vw, 40px)',
     textAlign: 'center',
-    background: 'linear-gradient(180deg, #fafbfc 0%, #fff 100%)',
+    background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
   },
 
   avatarWrapper: {
     marginBottom: 20,
-    filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.15))',
+    filter: 'drop-shadow(0 10px 25px rgba(0,100,145,0.2))',
   },
 
   welcomeTitle: {
     fontSize: 'clamp(24px, 6vw, 30px)',
     fontWeight: 900,
     fontFamily: "'Nunito', sans-serif",
-    color: '#1f2937',
+    color: '#1e293b',
     marginBottom: 8,
   },
 
   welcomeText: {
     fontSize: 'clamp(15px, 3.8vw, 17px)',
     fontWeight: 600,
-    color: '#6b7280',
+    color: '#64748b',
   },
 
   title: {
     fontSize: 'clamp(24px, 6vw, 28px)',
     fontWeight: 900,
     fontFamily: "'Nunito', sans-serif",
-    color: '#1f2937',
+    color: '#1e293b',
     marginBottom: 8,
   },
 
   subtitle: {
     fontSize: 'clamp(14px, 3.5vw, 16px)',
     fontWeight: 600,
-    color: '#6b7280',
+    color: '#64748b',
     marginBottom: 28,
   },
 
@@ -514,7 +571,7 @@ const styles = {
     marginTop: 20,
     fontSize: 'clamp(12px, 3vw, 14px)',
     fontWeight: 600,
-    color: '#9ca3af',
+    color: '#94a3b8',
   },
 
   chat: {
@@ -524,7 +581,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 14,
-    background: '#fafbfc',
+    background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)',
   },
 
   messageRow: {
@@ -538,11 +595,12 @@ const styles = {
     width: 34,
     height: 34,
     borderRadius: '50%',
-    background: 'linear-gradient(135deg, #E31837 0%, #C41230 100%)',
+    background: 'linear-gradient(135deg, #006491 0%, #0088c2 100%)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
+    boxShadow: '0 4px 12px rgba(0, 100, 145, 0.3)',
   },
 
   userBubble: {
@@ -552,9 +610,9 @@ const styles = {
     fontSize: 'clamp(14px, 3.5vw, 16px)',
     fontWeight: 600,
     lineHeight: 1.5,
-    background: 'linear-gradient(135deg, #006491 0%, #005580 100%)',
+    background: 'linear-gradient(135deg, #006491 0%, #0088c2 100%)',
     color: '#fff',
-    boxShadow: '0 4px 15px rgba(0, 100, 145, 0.3)',
+    boxShadow: '0 4px 15px rgba(0, 100, 145, 0.25)',
   },
 
   agentBubble: {
@@ -565,14 +623,14 @@ const styles = {
     fontWeight: 600,
     lineHeight: 1.5,
     background: '#fff',
-    color: '#1f2937',
-    border: '2px solid #eee',
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.05)',
+    color: '#1e293b',
+    border: '2px solid #e2e8f0',
+    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.04)',
   },
 
   inputBar: {
     padding: 'clamp(14px, 3.5vw, 18px)',
-    borderTop: '1px solid #eee',
+    borderTop: '1px solid #e2e8f0',
     display: 'flex',
     gap: 12,
     background: '#fff',
@@ -582,11 +640,12 @@ const styles = {
     flex: 1,
     padding: 'clamp(14px, 3.5vw, 18px) clamp(18px, 4.5vw, 24px)',
     borderRadius: 30,
-    border: '2px solid #e5e7eb',
+    border: '2px solid #e2e8f0',
     fontSize: 'clamp(14px, 3.5vw, 16px)',
     fontWeight: 600,
     fontFamily: "'Nunito', sans-serif",
-    background: '#fafbfc',
+    background: '#f8fafc',
+    transition: 'all 0.3s ease',
   },
 
   sendBtn: {
@@ -594,13 +653,14 @@ const styles = {
     height: 'clamp(52px, 14vw, 60px)',
     borderRadius: '50%',
     border: 'none',
-    background: 'linear-gradient(135deg, #E31837 0%, #C41230 100%)',
+    background: 'linear-gradient(135deg, #E31837 0%, #ff3d5a 100%)',
     color: '#fff',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 6px 24px rgba(227, 24, 55, 0.4)',
+    boxShadow: '0 6px 24px rgba(227, 24, 55, 0.35)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   },
 
   callContainer: { flex: 1, display: 'flex', flexDirection: 'column' },
@@ -613,7 +673,7 @@ const styles = {
     justifyContent: 'center',
     padding: 'clamp(28px, 6vw, 40px)',
     textAlign: 'center',
-    background: 'linear-gradient(180deg, #fafbfc 0%, #f0f4f8 100%)',
+    background: 'linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%)',
   },
 
   startCallBtn: {
@@ -623,13 +683,14 @@ const styles = {
     padding: 'clamp(18px, 4.5vw, 22px) clamp(36px, 9vw, 50px)',
     borderRadius: 50,
     border: 'none',
-    background: 'linear-gradient(135deg, #E31837 0%, #C41230 100%)',
+    background: 'linear-gradient(135deg, #E31837 0%, #ff3d5a 100%)',
     color: '#fff',
     fontSize: 'clamp(17px, 4.2vw, 20px)',
     fontWeight: 800,
     fontFamily: "'Nunito', sans-serif",
     cursor: 'pointer',
-    boxShadow: '0 10px 35px rgba(227, 24, 55, 0.4)',
+    boxShadow: '0 10px 35px rgba(227, 24, 55, 0.35)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   },
 
   activeCallScreen: {
@@ -641,6 +702,27 @@ const styles = {
     justifyContent: 'space-around',
     padding: 'clamp(36px, 8vw, 50px) clamp(20px, 5vw, 30px)',
     position: 'relative',
+    overflow: 'hidden',
+  },
+
+  callCircle1: {
+    position: 'absolute',
+    width: '400px',
+    height: '400px',
+    borderRadius: '50%',
+    background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
+    top: '-150px',
+    right: '-150px',
+  },
+
+  callCircle2: {
+    position: 'absolute',
+    width: '300px',
+    height: '300px',
+    borderRadius: '50%',
+    background: 'radial-gradient(circle, rgba(227,24,55,0.15) 0%, transparent 70%)',
+    bottom: '-100px',
+    left: '-100px',
   },
 
   agentAvatarLarge: {
@@ -653,6 +735,7 @@ const styles = {
     justifyContent: 'center',
     color: '#fff',
     position: 'relative',
+    backdropFilter: 'blur(10px)',
   },
 
   avatarRing: {
@@ -663,7 +746,7 @@ const styles = {
     animation: 'pulse 2s ease-in-out infinite',
   },
 
-  callerInfo: { textAlign: 'center' },
+  callerInfo: { textAlign: 'center', position: 'relative', zIndex: 1 },
 
   callerName: {
     fontSize: 'clamp(28px, 7vw, 34px)',
@@ -690,6 +773,8 @@ const styles = {
     fontWeight: 800,
     color: '#fff',
     fontFamily: 'monospace',
+    position: 'relative',
+    zIndex: 1,
   },
 
   timerDot: {
@@ -707,6 +792,8 @@ const styles = {
     justifyContent: 'center',
     gap: 7,
     height: 50,
+    position: 'relative',
+    zIndex: 1,
   },
 
   voiceBar: {
@@ -723,13 +810,16 @@ const styles = {
     padding: 'clamp(18px, 4.5vw, 22px) clamp(36px, 9vw, 50px)',
     borderRadius: 50,
     border: 'none',
-    background: 'linear-gradient(135deg, #E31837 0%, #C41230 100%)',
+    background: 'linear-gradient(135deg, #E31837 0%, #ff3d5a 100%)',
     color: '#fff',
     fontWeight: 800,
     fontFamily: "'Nunito', sans-serif",
     fontSize: 'clamp(16px, 4vw, 18px)',
     cursor: 'pointer',
     boxShadow: '0 12px 35px rgba(227, 24, 55, 0.5)',
+    position: 'relative',
+    zIndex: 1,
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   },
 
   footer: {
@@ -738,13 +828,14 @@ const styles = {
     justifyContent: 'center',
     gap: 12,
     padding: 'clamp(14px, 3.5vw, 18px)',
-    background: 'rgba(255, 255, 255, 0.95)',
+    background: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 16,
-    boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-    color: '#1f2937',
+    boxShadow: '0 4px 20px rgba(0,100,145,0.15)',
+    backdropFilter: 'blur(10px)',
+    color: '#1e293b',
     fontSize: 'clamp(13px, 3.2vw, 15px)',
     fontWeight: 700,
   },
 
-  footerDot: { color: '#E31837' },
+  footerDot: { color: '#006491' },
 };
