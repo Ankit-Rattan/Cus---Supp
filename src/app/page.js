@@ -836,6 +836,7 @@ const styles = {
     fontWeight: 600,
     fontFamily: "'Nunito', sans-serif",
     background: '#f8fafc',
+    color: '#1e293b',
     transition: 'all 0.3s ease',
   },
 
