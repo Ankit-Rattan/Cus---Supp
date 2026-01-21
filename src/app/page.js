@@ -4,25 +4,65 @@ import { useState, useRef, useEffect } from 'react';
 import { useConversation } from '@elevenlabs/react';
 import Image from 'next/image';
 
-// Domino Tile Icon (Classic two-tile domino)
-const DominoTileIcon = ({ size = 48 }) => (
-  <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Red tile */}
-    <rect x="4" y="4" width="18" height="40" rx="3" fill="#E31837" stroke="#fff" strokeWidth="2"/>
-    <circle cx="13" cy="14" r="3" fill="#fff"/>
-    <circle cx="13" cy="34" r="3" fill="#fff"/>
-    {/* Blue tile */}
-    <rect x="26" y="4" width="18" height="40" rx="3" fill="#006491" stroke="#fff" strokeWidth="2"/>
-    <circle cx="35" cy="14" r="3" fill="#fff"/>
-    <circle cx="35" cy="24" r="3" fill="#fff"/>
-    <circle cx="35" cy="34" r="3" fill="#fff"/>
+// Customer Avatar SVG - Friendly cartoon character
+const CustomerAvatar = ({ size = 120 }) => (
+  <svg width={size} height={size} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Background circle */}
+    <circle cx="60" cy="60" r="58" fill="url(#avatarGrad)" stroke="#E31837" strokeWidth="3"/>
+    
+    {/* Hair */}
+    <ellipse cx="60" cy="35" rx="32" ry="20" fill="#4A3728"/>
+    <path d="M28 45 Q30 25 60 22 Q90 25 92 45" fill="#4A3728"/>
+    
+    {/* Face */}
+    <ellipse cx="60" cy="55" rx="28" ry="30" fill="#FFD5B8"/>
+    
+    {/* Eyes */}
+    <ellipse cx="48" cy="50" rx="6" ry="7" fill="#fff"/>
+    <ellipse cx="72" cy="50" rx="6" ry="7" fill="#fff"/>
+    <circle cx="49" cy="51" r="3.5" fill="#3B2F2F"/>
+    <circle cx="73" cy="51" r="3.5" fill="#3B2F2F"/>
+    <circle cx="50" cy="49" r="1.5" fill="#fff"/>
+    <circle cx="74" cy="49" r="1.5" fill="#fff"/>
+    
+    {/* Eyebrows */}
+    <path d="M42 42 Q48 39 54 42" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" fill="none"/>
+    <path d="M66 42 Q72 39 78 42" stroke="#4A3728" strokeWidth="2" strokeLinecap="round" fill="none"/>
+    
+    {/* Nose */}
+    <path d="M60 55 Q62 60 60 63 Q58 60 60 55" fill="#E8B89D"/>
+    
+    {/* Smile */}
+    <path d="M48 70 Q60 82 72 70" stroke="#C96A4B" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+    
+    {/* Cheeks */}
+    <ellipse cx="40" cy="65" rx="6" ry="4" fill="#FFB6B6" opacity="0.6"/>
+    <ellipse cx="80" cy="65" rx="6" ry="4" fill="#FFB6B6" opacity="0.6"/>
+    
+    {/* Body/Shirt */}
+    <path d="M30 95 Q30 85 60 85 Q90 85 90 95 L90 120 L30 120 Z" fill="#006491"/>
+    <path d="M50 85 L60 100 L70 85" fill="#E31837"/>
+    
+    <defs>
+      <linearGradient id="avatarGrad" x1="0" y1="0" x2="120" y2="120">
+        <stop offset="0%" stopColor="#FFF5F0"/>
+        <stop offset="100%" stopColor="#FFE5DC"/>
+      </linearGradient>
+    </defs>
   </svg>
 );
 
 // Phone Icon
-const PhoneIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+const PhoneIcon = ({ size = 24 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+  </svg>
+);
+
+// Chat Icon
+const ChatIcon = ({ size = 24 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
   </svg>
 );
 
@@ -48,31 +88,25 @@ const HeadsetIcon = ({ size = 28 }) => (
   </svg>
 );
 
-// Chat Icon
-const ChatIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+// Domino Tile Icon for agent avatar
+const DominoTileIcon = ({ size = 24 }) => (
+  <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="4" y="4" width="18" height="40" rx="3" fill="#E31837" stroke="#fff" strokeWidth="2"/>
+    <circle cx="13" cy="14" r="3" fill="#fff"/>
+    <circle cx="13" cy="34" r="3" fill="#fff"/>
+    <rect x="26" y="4" width="18" height="40" rx="3" fill="#006491" stroke="#fff" strokeWidth="2"/>
+    <circle cx="35" cy="14" r="3" fill="#fff"/>
+    <circle cx="35" cy="24" r="3" fill="#fff"/>
+    <circle cx="35" cy="34" r="3" fill="#fff"/>
   </svg>
 );
 
-// Pizza Slice Icon
-const PizzaIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-    <path d="M12 2C8.5 2 5.5 3.5 3.5 6L12 22L20.5 6C18.5 3.5 15.5 2 12 2Z" fill="#FFB347" stroke="#E31837" strokeWidth="1.5"/>
-    <circle cx="10" cy="8" r="1.5" fill="#E31837"/>
-    <circle cx="14" cy="10" r="1.5" fill="#E31837"/>
-    <circle cx="11" cy="13" r="1.5" fill="#E31837"/>
-    <circle cx="9" cy="10" r="1" fill="#4CAF50"/>
-    <circle cx="14" cy="7" r="1" fill="#4CAF50"/>
-  </svg>
-);
-
-export default function VoiceSDKPage() {
+export default function CustomerSupportPage() {
   const [text, setText] = useState('');
   const [messages, setMessages] = useState([]);
-  const [isCalling, setIsCalling] = useState(false);
+  const [mode, setMode] = useState('chat'); // 'chat' or 'call'
+  const [isCallActive, setIsCallActive] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
-  const [isHoveringCall, setIsHoveringCall] = useState(false);
   const chatEndRef = useRef(null);
   const callTimerRef = useRef(null);
 
@@ -81,7 +115,7 @@ export default function VoiceSDKPage() {
   }, [messages]);
 
   useEffect(() => {
-    if (isCalling) {
+    if (isCallActive) {
       callTimerRef.current = setInterval(() => {
         setCallDuration(prev => prev + 1);
       }, 1000);
@@ -90,7 +124,7 @@ export default function VoiceSDKPage() {
       setCallDuration(0);
     }
     return () => clearInterval(callTimerRef.current);
-  }, [isCalling]);
+  }, [isCallActive]);
 
   const formatDuration = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -112,7 +146,7 @@ export default function VoiceSDKPage() {
   const voiceAgent = useConversation();
 
   async function sendText() {
-    if (!text.trim() || isCalling) return;
+    if (!text.trim()) return;
     const userText = text;
     setText('');
     setMessages((prev) => [...prev, { role: 'user', text: userText }]);
@@ -128,8 +162,7 @@ export default function VoiceSDKPage() {
   }
 
   async function startCall() {
-    setIsCalling(true);
-    setMessages([]);
+    setIsCallActive(true);
     await navigator.mediaDevices.getUserMedia({ audio: true });
     await voiceAgent.startSession({
       agentId: process.env.NEXT_PUBLIC_VOICE_AGENT_ID,
@@ -138,192 +171,191 @@ export default function VoiceSDKPage() {
   }
 
   async function endCall() {
-    setIsCalling(false);
+    setIsCallActive(false);
     await voiceAgent.endSession();
   }
 
+  const switchToCall = () => {
+    setMode('call');
+    setMessages([]);
+  };
+
+  const switchToChat = () => {
+    setMode('chat');
+    if (isCallActive) {
+      endCall();
+    }
+  };
+
   return (
     <div style={styles.page}>
-      {/* Background Image with Overlay */}
+      {/* Background */}
       <div style={styles.bgImage}>
-        <Image
-          src="/pizza-bg.jpg"
-          alt="Background"
-          fill
-          style={{ objectFit: 'cover' }}
-          priority
-        />
+        <Image src="/pizza-bg.jpg" alt="Background" fill style={{ objectFit: 'cover' }} priority />
         <div style={styles.bgOverlay} />
       </div>
 
-      {/* Floating decorative elements */}
-      <div style={styles.floatingPizza1}><PizzaIcon /></div>
-      <div style={styles.floatingPizza2}><PizzaIcon /></div>
-      
       {/* Main Container */}
       <div style={styles.container}>
-        {/* Header */}
-        <header style={styles.topBar}>
-          <div style={styles.logoSection}>
-            <div style={styles.logoWrapper}>
-              <DominoTileIcon size={44} />
-            </div>
-            <div style={styles.brandTextWrapper}>
-              <span style={styles.brandText}>Domino's</span>
-              <span style={styles.brandSubtext}>Pizza</span>
-            </div>
-          </div>
-          <div style={styles.supportBadge}>
-            <ChatIcon />
-            <span>24/7 Support</span>
-          </div>
+        {/* Logo Header */}
+        <header style={styles.logoHeader}>
+          <Image
+            src="/dominos-logo.png"
+            alt="Domino's"
+            width={160}
+            height={50}
+            style={{ objectFit: 'contain' }}
+            priority
+          />
         </header>
 
-        {/* Chat Card */}
+        {/* Main Card */}
         <main style={styles.card}>
-          {isCalling ? (
-            /* ================= CALL SCREEN ================= */
-            <div style={styles.callScreen}>
-              <div style={styles.callBgPattern} />
-              
-              <div style={styles.agentAvatarLarge}>
-                <HeadsetIcon size={50} />
-                <div style={styles.avatarRing} />
-                <div style={styles.avatarRing2} />
-              </div>
+          {/* Mode Switcher */}
+          <div style={styles.modeSwitcher}>
+            <button
+              style={{
+                ...styles.modeBtn,
+                ...(mode === 'chat' ? styles.modeBtnActive : {}),
+              }}
+              onClick={switchToChat}
+            >
+              <ChatIcon size={20} />
+              <span>Chat</span>
+            </button>
+            <button
+              style={{
+                ...styles.modeBtn,
+                ...(mode === 'call' ? styles.modeBtnActiveCall : {}),
+              }}
+              onClick={switchToCall}
+            >
+              <PhoneIcon size={20} />
+              <span>Call</span>
+            </button>
+          </div>
 
-              <div style={styles.callerInfo}>
-                <div style={styles.callerName}>Raman</div>
-                <div style={styles.callerRole}>Domino's Support Agent</div>
-              </div>
+          {mode === 'call' ? (
+            /* ================= CALL MODE ================= */
+            <div style={styles.callContainer}>
+              {!isCallActive ? (
+                /* Pre-call screen */
+                <div style={styles.preCallScreen}>
+                  <div style={styles.customerAvatarWrapper}>
+                    <CustomerAvatar size={140} />
+                  </div>
+                  <h2 style={styles.callTitle}>Voice Support</h2>
+                  <p style={styles.callSubtitle}>
+                    Speak directly with our support agent for quick assistance
+                  </p>
+                  <button style={styles.startCallBtn} onClick={startCall}>
+                    <PhoneIcon size={24} />
+                    <span>Start Call</span>
+                  </button>
+                  <p style={styles.callNote}>🎧 Make sure your microphone is enabled</p>
+                </div>
+              ) : (
+                /* Active call screen */
+                <div style={styles.activeCallScreen}>
+                  <div style={styles.callBgPattern} />
+                  
+                  <div style={styles.agentAvatarLarge}>
+                    <HeadsetIcon size={50} />
+                    <div style={styles.avatarRing} />
+                    <div style={styles.avatarRing2} />
+                  </div>
 
-              <div style={styles.callTimer}>
-                <div style={styles.timerDot} />
-                <span>{formatDuration(callDuration)}</span>
-              </div>
+                  <div style={styles.callerInfo}>
+                    <div style={styles.callerName}>Raman</div>
+                    <div style={styles.callerRole}>Support Agent</div>
+                  </div>
 
-              <div style={styles.voiceWave}>
-                {[...Array(7)].map((_, i) => (
-                  <div key={i} style={{...styles.voiceBar, animationDelay: `${i * 0.1}s`}} />
-                ))}
-              </div>
+                  <div style={styles.callTimer}>
+                    <div style={styles.timerDot} />
+                    <span>{formatDuration(callDuration)}</span>
+                  </div>
 
-              <button style={styles.endCallBtn} onClick={endCall}>
-                <EndCallIcon />
-                <span>End Call</span>
-              </button>
+                  <div style={styles.voiceWave}>
+                    {[...Array(7)].map((_, i) => (
+                      <div key={i} style={{...styles.voiceBar, animationDelay: `${i * 0.1}s`}} />
+                    ))}
+                  </div>
+
+                  <button style={styles.endCallBtn} onClick={endCall}>
+                    <EndCallIcon />
+                    <span>End Call</span>
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
+            /* ================= CHAT MODE ================= */
             <>
-              {/* ================= HEADER ================= */}
-              <div style={styles.header}>
+              {/* Chat Header */}
+              <div style={styles.chatHeader}>
                 <div style={styles.headerLeft}>
                   <div style={styles.agentAvatar}>
-                    <HeadsetIcon size={24} />
+                    <HeadsetIcon size={22} />
                   </div>
                   <div>
-                    <div style={styles.headerTitle}>Domino's Support</div>
+                    <div style={styles.headerTitle}>Support Agent</div>
                     <div style={styles.headerStatus}>
                       <span style={styles.statusDot} />
-                      <span>Online • Avg. response {'<'}30s</span>
+                      <span>Online</span>
                     </div>
                   </div>
                 </div>
-                <button 
-                  style={{
-                    ...styles.callBtn,
-                    ...(isHoveringCall ? styles.callBtnHover : {})
-                  }}
-                  onClick={startCall}
-                  onMouseEnter={() => setIsHoveringCall(true)}
-                  onMouseLeave={() => setIsHoveringCall(false)}
-                >
-                  <PhoneIcon />
-                  <span>Call Now</span>
-                </button>
               </div>
 
-              {/* ================= WELCOME ================= */}
-              {messages.length === 0 && (
+              {/* Welcome or Chat */}
+              {messages.length === 0 ? (
                 <div style={styles.welcomeSection}>
-                  <div style={styles.welcomeIconWrapper}>
-                    <PizzaIcon />
+                  <div style={styles.customerAvatarWrapper}>
+                    <CustomerAvatar size={120} />
                   </div>
-                  <h2 style={styles.welcomeTitle}>How can we help you today?</h2>
+                  <h2 style={styles.welcomeTitle}>Hi there! 👋</h2>
                   <p style={styles.welcomeText}>
-                    Get instant support for orders, deliveries, refunds & more
+                    Tell us about your concern and we'll help you right away.
                   </p>
-                  <div style={styles.quickActions}>
-                    {[
-                      { icon: '📦', label: 'Track Order', query: 'Where is my order?' },
-                      { icon: '🔄', label: 'Refund', query: 'I need a refund' },
-                      { icon: '⚠️', label: 'Issue', query: 'I have a complaint' },
-                      { icon: '⭐', label: 'Feedback', query: 'I want to give feedback' },
-                    ].map((item, i) => (
-                      <button
-                        key={i}
-                        style={styles.quickBtn}
-                        onClick={() => setText(item.query)}
-                        onMouseEnter={(e) => {
-                          e.target.style.background = '#E31837';
-                          e.target.style.color = '#fff';
-                          e.target.style.borderColor = '#E31837';
-                          e.target.style.transform = 'translateY(-3px)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.background = '#fff';
-                          e.target.style.color = '#374151';
-                          e.target.style.borderColor = '#e5e7eb';
-                          e.target.style.transform = 'translateY(0)';
-                        }}
-                      >
-                        <span>{item.icon}</span>
-                        <span>{item.label}</span>
-                      </button>
-                    ))}
-                  </div>
+                </div>
+              ) : (
+                <div style={styles.chat}>
+                  {messages.map((m, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        ...styles.messageRow,
+                        justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start',
+                      }}
+                    >
+                      {m.role === 'agent' && (
+                        <div style={styles.agentAvatarSmall}>
+                          <DominoTileIcon size={18} />
+                        </div>
+                      )}
+                      <div style={m.role === 'user' ? styles.userBubble : styles.agentBubble}>
+                        {m.text}
+                      </div>
+                    </div>
+                  ))}
+                  <div ref={chatEndRef} />
                 </div>
               )}
 
-              {/* ================= CHAT ================= */}
-              <div style={styles.chat}>
-                {messages.map((m, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      ...styles.messageRow,
-                      justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start',
-                      animationDelay: `${i * 0.1}s`,
-                    }}
-                  >
-                    {m.role === 'agent' && (
-                      <div style={styles.agentAvatarSmall}>
-                        <DominoTileIcon size={20} />
-                      </div>
-                    )}
-                    <div style={m.role === 'user' ? styles.userBubble : styles.agentBubble}>
-                      {m.text}
-                    </div>
-                  </div>
-                ))}
-                <div ref={chatEndRef} />
-              </div>
-
-              {/* ================= INPUT ================= */}
+              {/* Input */}
               <div style={styles.inputBar}>
                 <input
                   value={text}
-                  placeholder="Type your message..."
+                  placeholder="Describe your issue..."
                   onChange={(e) => setText(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && sendText()}
                   style={styles.input}
                 />
-                <button 
+                <button
                   style={{
                     ...styles.sendBtn,
                     opacity: text.trim() ? 1 : 0.5,
-                    transform: text.trim() ? 'scale(1)' : 'scale(0.95)',
-                  }} 
+                  }}
                   onClick={sendText}
                   disabled={!text.trim()}
                 >
@@ -336,11 +368,9 @@ export default function VoiceSDKPage() {
 
         {/* Footer */}
         <footer style={styles.footer}>
-          <div style={styles.footerContent}>
-            <span>📞 1800-208-1234</span>
-            <span style={styles.footerDot}>•</span>
-            <span>✉️ guestcaredominos@jublfood.com</span>
-          </div>
+          <span>📞 1800-208-1234</span>
+          <span style={styles.footerDot}>•</span>
+          <span>We're here 24/7</span>
         </footer>
       </div>
     </div>
@@ -377,29 +407,9 @@ const styles = {
     )`,
   },
 
-  floatingPizza1: {
-    position: 'fixed',
-    top: '10%',
-    left: '5%',
-    opacity: 0.15,
-    animation: 'float 6s ease-in-out infinite',
-    zIndex: 1,
-    transform: 'rotate(-15deg) scale(2)',
-  },
-
-  floatingPizza2: {
-    position: 'fixed',
-    bottom: '15%',
-    right: '8%',
-    opacity: 0.1,
-    animation: 'float 8s ease-in-out infinite reverse',
-    zIndex: 1,
-    transform: 'rotate(20deg) scale(2.5)',
-  },
-
   container: {
     width: '100%',
-    maxWidth: 'min(460px, 95vw)',
+    maxWidth: 'min(440px, 95vw)',
     display: 'flex',
     flexDirection: 'column',
     gap: 'clamp(12px, 2vw, 16px)',
@@ -407,77 +417,67 @@ const styles = {
     zIndex: 2,
   },
 
-  topBar: {
+  logoHeader: {
     display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '0 4px',
-  },
-
-  logoSection: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 12,
-  },
-
-  logoWrapper: {
+    justifyContent: 'center',
+    padding: '8px 0',
     filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))',
-  },
-
-  brandTextWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-
-  brandText: {
-    color: '#fff',
-    fontSize: 'clamp(20px, 5vw, 26px)',
-    fontWeight: 800,
-    letterSpacing: '-0.5px',
-    lineHeight: 1.1,
-    textShadow: '0 2px 10px rgba(0,0,0,0.3)',
-  },
-
-  brandSubtext: {
-    color: 'rgba(255,255,255,0.8)',
-    fontSize: 'clamp(11px, 2.5vw, 13px)',
-    fontWeight: 500,
-    letterSpacing: '2px',
-    textTransform: 'uppercase',
-  },
-
-  supportBadge: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-    background: 'rgba(255, 255, 255, 0.15)',
-    backdropFilter: 'blur(10px)',
-    padding: 'clamp(8px, 2vw, 10px) clamp(12px, 3vw, 16px)',
-    borderRadius: 25,
-    color: '#fff',
-    fontSize: 'clamp(11px, 2.5vw, 13px)',
-    fontWeight: 600,
-    border: '1px solid rgba(255,255,255,0.2)',
-    transition: 'all 0.3s ease',
   },
 
   card: {
     background: '#fff',
-    borderRadius: 'clamp(16px, 4vw, 24px)',
+    borderRadius: 'clamp(20px, 5vw, 28px)',
     boxShadow: '0 25px 60px -12px rgba(0, 0, 0, 0.5)',
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
-    height: 'clamp(500px, 70vh, 620px)',
+    minHeight: 'clamp(520px, 68vh, 600px)',
   },
 
-  header: {
-    padding: 'clamp(14px, 3vw, 18px) clamp(16px, 4vw, 22px)',
-    background: 'linear-gradient(135deg, #E31837 0%, #C41230 50%, #A01028 100%)',
+  /* Mode Switcher */
+  modeSwitcher: {
     display: 'flex',
-    justifyContent: 'space-between',
+    padding: '12px',
+    gap: '8px',
+    background: '#f5f5f5',
+    borderBottom: '1px solid #eee',
+  },
+
+  modeBtn: {
+    flex: 1,
+    display: 'flex',
     alignItems: 'center',
-    gap: 12,
+    justifyContent: 'center',
+    gap: 8,
+    padding: 'clamp(12px, 3vw, 16px)',
+    borderRadius: 14,
+    border: 'none',
+    background: 'transparent',
+    color: '#666',
+    fontSize: 'clamp(14px, 3.5vw, 16px)',
+    fontWeight: 600,
+    cursor: 'pointer',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  },
+
+  modeBtnActive: {
+    background: 'linear-gradient(135deg, #006491 0%, #004A6E 100%)',
+    color: '#fff',
+    boxShadow: '0 4px 15px rgba(0, 100, 145, 0.4)',
+  },
+
+  modeBtnActiveCall: {
+    background: 'linear-gradient(135deg, #E31837 0%, #C41230 100%)',
+    color: '#fff',
+    boxShadow: '0 4px 15px rgba(227, 24, 55, 0.4)',
+  },
+
+  /* Chat Header */
+  chatHeader: {
+    padding: 'clamp(14px, 3vw, 18px) clamp(16px, 4vw, 22px)',
+    background: 'linear-gradient(135deg, #E31837 0%, #C41230 100%)',
+    display: 'flex',
+    alignItems: 'center',
   },
 
   headerLeft: {
@@ -487,26 +487,25 @@ const styles = {
   },
 
   agentAvatar: {
-    width: 'clamp(40px, 10vw, 48px)',
-    height: 'clamp(40px, 10vw, 48px)',
+    width: 'clamp(42px, 10vw, 48px)',
+    height: 'clamp(42px, 10vw, 48px)',
     borderRadius: '50%',
     background: 'rgba(255, 255, 255, 0.2)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     color: '#fff',
-    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
   },
 
   headerTitle: {
     color: '#fff',
-    fontSize: 'clamp(14px, 3.5vw, 17px)',
+    fontSize: 'clamp(15px, 3.8vw, 18px)',
     fontWeight: 700,
   },
 
   headerStatus: {
     color: 'rgba(255, 255, 255, 0.9)',
-    fontSize: 'clamp(10px, 2.5vw, 12px)',
+    fontSize: 'clamp(11px, 2.8vw, 13px)',
     display: 'flex',
     alignItems: 'center',
     gap: 6,
@@ -517,88 +516,40 @@ const styles = {
     height: 8,
     borderRadius: '50%',
     background: '#4ade80',
-    boxShadow: '0 0 8px #4ade80, 0 0 16px #4ade80',
-    animation: 'pulse 2s infinite',
+    boxShadow: '0 0 8px #4ade80',
   },
 
-  callBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-    padding: 'clamp(10px, 2.5vw, 12px) clamp(16px, 4vw, 22px)',
-    borderRadius: 30,
-    border: '2px solid rgba(255, 255, 255, 0.4)',
-    background: 'rgba(255, 255, 255, 0.15)',
-    color: '#fff',
-    fontWeight: 700,
-    fontSize: 'clamp(12px, 3vw, 14px)',
-    cursor: 'pointer',
-    backdropFilter: 'blur(5px)',
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-  },
-
-  callBtnHover: {
-    background: '#fff',
-    color: '#E31837',
-    borderColor: '#fff',
-    transform: 'translateY(-2px)',
-    boxShadow: '0 8px 25px rgba(255,255,255,0.3)',
-  },
-
+  /* Welcome Section */
   welcomeSection: {
-    padding: 'clamp(24px, 5vw, 32px) clamp(20px, 4vw, 28px)',
-    textAlign: 'center',
-    borderBottom: '1px solid #f0f0f0',
-    background: 'linear-gradient(180deg, #fafbfc 0%, #fff 100%)',
-  },
-
-  welcomeIconWrapper: {
-    width: 64,
-    height: 64,
-    borderRadius: '50%',
-    background: 'linear-gradient(135deg, #FFF5F5 0%, #FFE5E5 100%)',
+    flex: 1,
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: '0 auto 16px',
-    boxShadow: '0 8px 24px rgba(227, 24, 55, 0.15)',
+    padding: 'clamp(30px, 6vw, 40px)',
+    textAlign: 'center',
+  },
+
+  customerAvatarWrapper: {
+    marginBottom: 20,
+    filter: 'drop-shadow(0 8px 20px rgba(0,0,0,0.15))',
   },
 
   welcomeTitle: {
-    fontSize: 'clamp(18px, 4.5vw, 22px)',
+    fontSize: 'clamp(22px, 5.5vw, 28px)',
     fontWeight: 800,
     color: '#1f2937',
-    marginBottom: 8,
+    marginBottom: 10,
   },
 
   welcomeText: {
-    fontSize: 'clamp(12px, 3vw, 14px)',
+    fontSize: 'clamp(14px, 3.5vw, 16px)',
     color: '#6b7280',
-    marginBottom: 20,
+    lineHeight: 1.6,
+    maxWidth: 280,
   },
 
-  quickActions: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: 10,
-  },
-
-  quickBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    padding: 'clamp(10px, 2.5vw, 14px)',
-    borderRadius: 12,
-    border: '2px solid #e5e7eb',
-    background: '#fff',
-    color: '#374151',
-    fontSize: 'clamp(12px, 3vw, 14px)',
-    fontWeight: 600,
-    cursor: 'pointer',
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-  },
-
+  /* Chat */
   chat: {
     flex: 1,
     padding: 'clamp(14px, 3vw, 18px)',
@@ -617,22 +568,21 @@ const styles = {
   },
 
   agentAvatarSmall: {
-    width: 34,
-    height: 34,
+    width: 32,
+    height: 32,
     borderRadius: '50%',
     background: 'linear-gradient(135deg, #E31837 0%, #C41230 100%)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-    boxShadow: '0 3px 10px rgba(227, 24, 55, 0.3)',
   },
 
   userBubble: {
     maxWidth: '78%',
     padding: 'clamp(12px, 3vw, 14px) clamp(14px, 3.5vw, 18px)',
     borderRadius: '20px 20px 4px 20px',
-    fontSize: 'clamp(13px, 3.2vw, 15px)',
+    fontSize: 'clamp(14px, 3.5vw, 15px)',
     lineHeight: 1.5,
     background: 'linear-gradient(135deg, #006491 0%, #005580 100%)',
     color: '#fff',
@@ -643,7 +593,7 @@ const styles = {
     maxWidth: '78%',
     padding: 'clamp(12px, 3vw, 14px) clamp(14px, 3.5vw, 18px)',
     borderRadius: '20px 20px 20px 4px',
-    fontSize: 'clamp(13px, 3.2vw, 15px)',
+    fontSize: 'clamp(14px, 3.5vw, 15px)',
     lineHeight: 1.5,
     background: '#fff',
     color: '#1f2937',
@@ -651,6 +601,7 @@ const styles = {
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
   },
 
+  /* Input */
   inputBar: {
     padding: 'clamp(14px, 3vw, 18px)',
     borderTop: '1px solid #f0f0f0',
@@ -661,18 +612,18 @@ const styles = {
 
   input: {
     flex: 1,
-    padding: 'clamp(12px, 3vw, 16px) clamp(16px, 4vw, 20px)',
+    padding: 'clamp(14px, 3.5vw, 16px) clamp(18px, 4.5vw, 22px)',
     borderRadius: 30,
     border: '2px solid #e5e7eb',
-    fontSize: 'clamp(13px, 3.2vw, 15px)',
+    fontSize: 'clamp(14px, 3.5vw, 15px)',
     fontFamily: 'inherit',
     transition: 'all 0.3s ease',
     background: '#fafbfc',
   },
 
   sendBtn: {
-    width: 'clamp(48px, 12vw, 54px)',
-    height: 'clamp(48px, 12vw, 54px)',
+    width: 'clamp(50px, 13vw, 56px)',
+    height: 'clamp(50px, 13vw, 56px)',
     borderRadius: '50%',
     border: 'none',
     background: 'linear-gradient(135deg, #E31837 0%, #C41230 100%)',
@@ -685,14 +636,69 @@ const styles = {
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   },
 
-  callScreen: {
+  /* Call Container */
+  callContainer: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+
+  preCallScreen: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 'clamp(30px, 6vw, 40px)',
+    textAlign: 'center',
+    background: 'linear-gradient(180deg, #fafbfc 0%, #f0f4f8 100%)',
+  },
+
+  callTitle: {
+    fontSize: 'clamp(22px, 5.5vw, 26px)',
+    fontWeight: 800,
+    color: '#1f2937',
+    marginBottom: 8,
+  },
+
+  callSubtitle: {
+    fontSize: 'clamp(13px, 3.2vw, 15px)',
+    color: '#6b7280',
+    lineHeight: 1.5,
+    marginBottom: 28,
+    maxWidth: 260,
+  },
+
+  startCallBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    padding: 'clamp(16px, 4vw, 20px) clamp(32px, 8vw, 44px)',
+    borderRadius: 40,
+    border: 'none',
+    background: 'linear-gradient(135deg, #E31837 0%, #C41230 100%)',
+    color: '#fff',
+    fontSize: 'clamp(16px, 4vw, 18px)',
+    fontWeight: 700,
+    cursor: 'pointer',
+    boxShadow: '0 8px 30px rgba(227, 24, 55, 0.4)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  },
+
+  callNote: {
+    marginTop: 20,
+    fontSize: 'clamp(11px, 2.8vw, 13px)',
+    color: '#9ca3af',
+  },
+
+  activeCallScreen: {
     flex: 1,
     background: 'linear-gradient(180deg, #006491 0%, #004A6E 40%, #003854 100%)',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-around',
-    padding: 'clamp(40px, 8vw, 60px) clamp(20px, 5vw, 30px)',
+    padding: 'clamp(40px, 8vw, 50px) clamp(20px, 5vw, 30px)',
     position: 'relative',
     overflow: 'hidden',
   },
@@ -707,8 +713,8 @@ const styles = {
   },
 
   agentAvatarLarge: {
-    width: 'clamp(90px, 22vw, 110px)',
-    height: 'clamp(90px, 22vw, 110px)',
+    width: 'clamp(100px, 25vw, 120px)',
+    height: 'clamp(100px, 25vw, 120px)',
     borderRadius: '50%',
     background: 'rgba(255, 255, 255, 0.15)',
     display: 'flex',
@@ -740,14 +746,14 @@ const styles = {
   },
 
   callerName: {
-    fontSize: 'clamp(24px, 6vw, 30px)',
+    fontSize: 'clamp(26px, 6.5vw, 32px)',
     fontWeight: 800,
     color: '#fff',
     marginBottom: 4,
   },
 
   callerRole: {
-    fontSize: 'clamp(12px, 3vw, 14px)',
+    fontSize: 'clamp(13px, 3.2vw, 15px)',
     color: 'rgba(255, 255, 255, 0.75)',
   },
 
@@ -755,17 +761,21 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: 10,
-    padding: '10px 24px',
+    padding: '12px 28px',
     background: 'rgba(0,0,0,0.2)',
     borderRadius: 30,
+    fontSize: 'clamp(20px, 5vw, 24px)',
+    fontWeight: 600,
+    color: '#fff',
+    fontFamily: 'monospace',
   },
 
   timerDot: {
-    width: 10,
-    height: 10,
+    width: 12,
+    height: 12,
     borderRadius: '50%',
     background: '#4ade80',
-    boxShadow: '0 0 10px #4ade80',
+    boxShadow: '0 0 12px #4ade80',
     animation: 'pulse 1s infinite',
   },
 
@@ -773,12 +783,12 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 5,
-    height: 45,
+    gap: 6,
+    height: 50,
   },
 
   voiceBar: {
-    width: 5,
+    width: 6,
     background: 'linear-gradient(180deg, #4ade80 0%, #22c55e 100%)',
     borderRadius: 3,
     animation: 'voicePulse 0.6s ease-in-out infinite',
@@ -788,34 +798,30 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: 12,
-    padding: 'clamp(14px, 3.5vw, 18px) clamp(28px, 7vw, 40px)',
-    borderRadius: 35,
+    padding: 'clamp(16px, 4vw, 20px) clamp(32px, 8vw, 44px)',
+    borderRadius: 40,
     border: 'none',
     background: 'linear-gradient(135deg, #E31837 0%, #C41230 100%)',
     color: '#fff',
     fontWeight: 700,
-    fontSize: 'clamp(14px, 3.5vw, 16px)',
+    fontSize: 'clamp(15px, 3.8vw, 17px)',
     cursor: 'pointer',
     boxShadow: '0 10px 30px rgba(227, 24, 55, 0.5)',
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   },
 
+  /* Footer */
   footer: {
-    textAlign: 'center',
-    padding: 'clamp(10px, 2.5vw, 14px)',
-    background: 'rgba(0, 0, 0, 0.25)',
-    borderRadius: 14,
-    backdropFilter: 'blur(10px)',
-  },
-
-  footerContent: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 'clamp(8px, 2vw, 16px)',
-    flexWrap: 'wrap',
-    color: 'rgba(255, 255, 255, 0.85)',
-    fontSize: 'clamp(11px, 2.8vw, 13px)',
+    gap: 'clamp(8px, 2vw, 12px)',
+    padding: 'clamp(12px, 3vw, 16px)',
+    background: 'rgba(0, 0, 0, 0.25)',
+    borderRadius: 14,
+    backdropFilter: 'blur(10px)',
+    color: 'rgba(255, 255, 255, 0.9)',
+    fontSize: 'clamp(12px, 3vw, 14px)',
     fontWeight: 500,
   },
 
