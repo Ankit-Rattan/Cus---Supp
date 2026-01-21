@@ -1,35 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  /* Domino's Brand Colors - More Vibrant */
+  /* Domino's Brand Colors */
   --dominos-red: #E31837;
-  --dominos-red-dark: #B71430;
-  --dominos-red-light: #FF2D4D;
-  --dominos-red-glow: rgba(227, 24, 55, 0.5);
+  --dominos-red-dark: #C41230;
+  --dominos-red-light: #FF3D5A;
   --dominos-blue: #006491;
   --dominos-blue-dark: #004A6E;
   --dominos-blue-light: #0088C2;
-  --dominos-blue-glow: rgba(0, 100, 145, 0.5);
-  
-  /* Accent Colors */
-  --gold: #FFD700;
-  --gold-light: #FFE44D;
-  
-  /* Neutral Colors */
   --white: #FFFFFF;
   --gray-50: #F9FAFB;
   --gray-100: #F3F4F6;
   --gray-200: #E5E7EB;
-  --gray-300: #D1D5DB;
-  --gray-400: #9CA3AF;
-  --gray-500: #6B7280;
   --gray-600: #4B5563;
-  --gray-700: #374151;
   --gray-800: #1F2937;
-  --gray-900: #111827;
-  
-  --background: #F0F4F8;
-  --foreground: #1F2937;
 }
 
 * {
@@ -39,9 +23,7 @@
 }
 
 body {
-  background: linear-gradient(135deg, var(--dominos-blue) 0%, var(--dominos-blue-dark) 50%, #003854 100%);
-  color: var(--foreground);
-  font-family: 'Poppins', 'Segoe UI', 'Roboto', sans-serif;
+  font-family: 'Nunito', 'Rubik', sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -67,106 +49,36 @@ body {
 
 /* Animations */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.8;
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 20px var(--dominos-red-glow);
-  }
-  50% {
-    box-shadow: 0 0 40px var(--dominos-red-glow), 0 0 60px var(--dominos-red-glow);
-  }
-}
-
-@keyframes voicePulse {
-  0%, 100% {
-    height: 10px;
-  }
-  50% {
-    height: 35px;
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
+@keyframes voicePulse {
+  0%, 100% { height: 10px; }
+  50% { height: 35px; }
 }
 
-.animate-slide-up {
-  animation: slideUp 0.5s ease-out forwards;
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(5deg); }
 }
 
-.animate-scale-in {
-  animation: scaleIn 0.3s ease-out forwards;
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-glow {
-  animation: glow 2s ease-in-out infinite;
-}
-
-/* Smooth transitions for all interactive elements */
+/* Smooth transitions */
 button, input, a {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -179,23 +91,8 @@ button:active {
   transform: translateY(0) scale(0.98);
 }
 
-/* Input focus styles */
 input:focus {
   outline: none;
   border-color: var(--dominos-red) !important;
   box-shadow: 0 0 0 4px rgba(227, 24, 55, 0.15);
-}
-
-/* Glass effect */
-.glass {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-/* Responsive breakpoints */
-@media (max-width: 640px) {
-  body {
-    font-size: 14px;
-  }
 }
