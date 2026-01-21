@@ -333,10 +333,9 @@ const styles = {
     zIndex: 1,
     background: `linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.95) 0%,
-      rgba(240, 248, 255, 0.92) 30%,
-      rgba(0, 100, 145, 0.88) 70%,
-      rgba(0, 74, 110, 0.92) 100%
+      rgba(0, 100, 145, 0.97) 0%,
+      rgba(0, 85, 125, 0.98) 50%,
+      rgba(0, 65, 100, 0.99) 100%
     )`,
   },
 
@@ -346,7 +345,7 @@ const styles = {
     width: '600px',
     height: '600px',
     borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(0, 100, 145, 0.3) 0%, transparent 70%)',
+    background: 'radial-gradient(circle, rgba(0, 130, 180, 0.4) 0%, transparent 70%)',
     top: '-200px',
     right: '-100px',
     animation: 'float 8s ease-in-out infinite',
@@ -357,7 +356,7 @@ const styles = {
     width: '400px',
     height: '400px',
     borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%)',
+    background: 'radial-gradient(circle, rgba(0, 150, 200, 0.3) 0%, transparent 70%)',
     bottom: '-100px',
     left: '-50px',
     animation: 'float 10s ease-in-out infinite reverse',
@@ -368,7 +367,7 @@ const styles = {
     width: '300px',
     height: '300px',
     borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(0, 100, 145, 0.2) 0%, transparent 70%)',
+    background: 'radial-gradient(circle, rgba(0, 120, 170, 0.35) 0%, transparent 70%)',
     top: '40%',
     left: '10%',
     animation: 'float 12s ease-in-out infinite',
@@ -379,7 +378,7 @@ const styles = {
     width: '500px',
     height: '500px',
     borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(227, 24, 55, 0.1) 0%, transparent 70%)',
+    background: 'radial-gradient(circle, rgba(0, 80, 120, 0.3) 0%, transparent 70%)',
     bottom: '20%',
     right: '5%',
     animation: 'float 15s ease-in-out infinite reverse',
@@ -390,7 +389,7 @@ const styles = {
     width: '250px',
     height: '250px',
     borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, transparent 70%)',
+    background: 'radial-gradient(circle, rgba(0, 140, 190, 0.35) 0%, transparent 70%)',
     top: '20%',
     left: '60%',
     animation: 'float 9s ease-in-out infinite',
@@ -415,24 +414,24 @@ const styles = {
   },
 
   tagline: {
-    color: '#006491',
+    color: '#fff',
     fontSize: 'clamp(14px, 3.5vw, 16px)',
     fontWeight: 800,
     textTransform: 'uppercase',
     letterSpacing: '3px',
-    textShadow: '0 1px 2px rgba(255,255,255,0.8)',
+    textShadow: '0 2px 4px rgba(0,0,0,0.3)',
   },
 
   card: {
     background: 'rgba(255, 255, 255, 0.98)',
     borderRadius: 'clamp(20px, 5vw, 28px)',
-    boxShadow: '0 30px 60px rgba(0, 100, 145, 0.2), 0 10px 30px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0 30px 60px rgba(0, 60, 100, 0.25), 0 10px 30px rgba(0, 0, 0, 0.15)',
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
     minHeight: 'clamp(500px, 65vh, 580px)',
     backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255, 255, 255, 0.5)',
+    border: '2px solid rgba(227, 24, 55, 0.15)',
   },
 
   modeSwitcher: {
@@ -462,9 +461,9 @@ const styles = {
   },
 
   modeBtnActiveBlue: {
-    background: 'linear-gradient(135deg, #006491 0%, #0088c2 100%)',
+    background: 'linear-gradient(135deg, #E31837 0%, #ff3d5a 100%)',
     color: '#fff',
-    boxShadow: '0 8px 25px rgba(0, 100, 145, 0.35)',
+    boxShadow: '0 8px 25px rgba(227, 24, 55, 0.35)',
     transform: 'translateY(-2px)',
   },
 
@@ -477,7 +476,7 @@ const styles = {
 
   chatHeader: {
     padding: 'clamp(14px, 3.5vw, 18px) clamp(18px, 4.5vw, 24px)',
-    background: 'linear-gradient(135deg, #006491 0%, #0077a8 100%)',
+    background: 'linear-gradient(135deg, #E31837 0%, #c41230 100%)',
   },
 
   headerLeft: {
@@ -535,7 +534,7 @@ const styles = {
 
   avatarWrapper: {
     marginBottom: 20,
-    filter: 'drop-shadow(0 10px 25px rgba(0,100,145,0.2))',
+    filter: 'drop-shadow(0 10px 25px rgba(227,24,55,0.2))',
   },
 
   welcomeTitle: {
@@ -595,12 +594,12 @@ const styles = {
     width: 34,
     height: 34,
     borderRadius: '50%',
-    background: 'linear-gradient(135deg, #006491 0%, #0088c2 100%)',
+    background: 'linear-gradient(135deg, #E31837 0%, #c41230 100%)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-    boxShadow: '0 4px 12px rgba(0, 100, 145, 0.3)',
+    boxShadow: '0 4px 12px rgba(227, 24, 55, 0.3)',
   },
 
   userBubble: {
@@ -610,9 +609,9 @@ const styles = {
     fontSize: 'clamp(14px, 3.5vw, 16px)',
     fontWeight: 600,
     lineHeight: 1.5,
-    background: 'linear-gradient(135deg, #006491 0%, #0088c2 100%)',
+    background: 'linear-gradient(135deg, #E31837 0%, #ff3d5a 100%)',
     color: '#fff',
-    boxShadow: '0 4px 15px rgba(0, 100, 145, 0.25)',
+    boxShadow: '0 4px 15px rgba(227, 24, 55, 0.25)',
   },
 
   agentBubble: {
@@ -828,14 +827,14 @@ const styles = {
     justifyContent: 'center',
     gap: 12,
     padding: 'clamp(14px, 3.5vw, 18px)',
-    background: 'rgba(255, 255, 255, 0.9)',
+    background: 'rgba(255, 255, 255, 0.95)',
     borderRadius: 16,
-    boxShadow: '0 4px 20px rgba(0,100,145,0.15)',
+    boxShadow: '0 4px 20px rgba(0,100,145,0.2)',
     backdropFilter: 'blur(10px)',
     color: '#1e293b',
     fontSize: 'clamp(13px, 3.2vw, 15px)',
     fontWeight: 700,
   },
 
-  footerDot: { color: '#006491' },
+  footerDot: { color: '#E31837' },
 };
