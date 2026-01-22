@@ -98,7 +98,7 @@ export default function AgentUI({
     placeholder: 'Type your message...',
     color: '#E31837',
     gradient: 'linear-gradient(135deg, #E31837 0%, #ff3d5a 100%)',
-  }
+  },agentId
 }) {
   const router = useRouter();
   const [text, setText] = useState('');
@@ -153,7 +153,7 @@ async function sendText() {
 
   if (conversation.status !== 'connected') {
     await conversation.startSession({
-      agentId, // 👈 passed from page
+      agentId, 
       connectionType: 'websocket',
       overrides: { conversation: { textOnly: true } }
     });
