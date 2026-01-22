@@ -11,7 +11,7 @@ export default function ReminderAgentPage() {
         tagline: 'Reminder Agent',
         welcomeTitle: 'Urgent Call! ⚡',
         welcomeText: 'Alert riders to report to outlet immediately for urgent service needs.',
-        agentName: 'Alex',
+        agentName: 'Harry',
         agentRole: 'Reminder Agent',
         placeholder: 'Enter rider details or outlet info...',
         color: '#f59e0b',

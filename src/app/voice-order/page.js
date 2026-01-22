@@ -65,7 +65,7 @@ export default function VoiceOrderPage() {
 
 
   const config = {
-    agentName: 'Maya',
+    agentName: 'Harry',
     agentRole: 'Order Agent',
     color: '#10b981',
     gradient: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',

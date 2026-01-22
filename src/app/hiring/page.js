@@ -11,7 +11,7 @@ export default function HiringAgentPage() {
         tagline: 'Hiring Agent',
         welcomeTitle: 'Join Our Team! 🚴',
         welcomeText: 'Interested in delivery rider positions? Let us tell you about job opportunities!',
-        agentName: 'Sam',
+        agentName: 'Harry',
         agentRole: 'Hiring Agent',
         placeholder: 'Ask about job opportunities...',
         color: '#006491',

@@ -114,7 +114,7 @@ export default function CustomerAgentPage() {
     tagline: 'Customer Agent',
     welcomeTitle: 'Hi there! 👋',
     welcomeText: 'How can we help you today? Ask about orders, complaints, or upload a pizza photo for quality check.',
-    agentName: 'Jay',
+    agentName: 'Harry',
     agentRole: 'Support Agent',
     placeholder: 'Describe your issue...',
     color: '#E31837',
