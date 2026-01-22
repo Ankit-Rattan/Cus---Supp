@@ -202,7 +202,7 @@ export default function VoiceOrderPage() {
                   </div>
                   <div style={styles.orderHint}>
                     <span>🍕</span>
-                    <span>Say your order - &quot;I&apos;d like a large pepperoni pizza&quot;</span>
+                    <span>Say your order - &quot;I&apos;d like a big pizza&quot;</span>
                   </div>
                   <div style={styles.voiceWave}>
                     {[...Array(7)].map((_, i) => (
