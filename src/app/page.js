@@ -1,325 +1,369 @@
 'use client';
 
 import { useState } from 'react';
-import { useConversation } from '@elevenlabs/react';
-import { classifyPizza } from '../lib/pizzaClassifier';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
-export default function VoiceSDKPage() {
-  const [text, setText] = useState('');
-  const [messages, setMessages] = useState([]);
-  const [isCalling, setIsCalling] = useState(false);
+// Service Icons
+const CustomerIcon = ({ size = 48 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+    <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+  </svg>
+);
 
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [loading, setLoading] = useState(false);
+const HiringIcon = ({ size = 48 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+    <circle cx="9" cy="7" r="4"/>
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>
+);
 
-  /* ================= TEXT AGENT ================= */
-  const textAgent = useConversation({
-    onMessage: (msg) => {
-      if (msg?.message) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: msg.source === 'user' ? 'user' : 'agent',
-            text: msg.message,
-          },
-        ]);
-      }
-    },
-  });
+const ReminderIcon = ({ size = 48 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    <path d="M12 2v2"/>
+  </svg>
+);
 
-  /* ================= VOICE AGENT ================= */
-  const voiceAgent = useConversation();
+const VoiceOrderIcon = ({ size = 48 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+    <line x1="12" x2="12" y1="19" y2="22"/>
+  </svg>
+);
 
-  /* ================= SEND TEXT ================= */
-  async function sendText() {
-    if (!text.trim() || isCalling) return;
+const ArrowIcon = ({ size = 20 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 12h14"/>
+    <path d="m12 5 7 7-7 7"/>
+  </svg>
+);
 
-    const userText = text;
-    setText('');
+const services = [
+  {
+    id: 'customer',
+    title: 'Customer Agent',
+    description: 'Get help with orders, complaints, and general support',
+    icon: CustomerIcon,
+    color: '#E31837',
+    gradient: 'linear-gradient(135deg, #E31837 0%, #ff3d5a 100%)',
+    path: '/customer',
+  },
+  {
+    id: 'hiring',
+    title: 'Hiring Agent',
+    description: 'Job opportunities for delivery riders and staff',
+    icon: HiringIcon,
+    color: '#006491',
+    gradient: 'linear-gradient(135deg, #006491 0%, #0088c2 100%)',
+    path: '/hiring',
+  },
+  {
+    id: 'reminder',
+    title: 'Reminder Agent',
+    description: 'Urgent alerts for riders to report to outlet',
+    icon: ReminderIcon,
+    color: '#f59e0b',
+    gradient: 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)',
+    path: '/reminder',
+  },
+  {
+    id: 'voice-order',
+    title: 'Voice Order',
+    description: 'Place your pizza order via voice call',
+    icon: VoiceOrderIcon,
+    color: '#10b981',
+    gradient: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+    path: '/voice-order',
+  },
+];
 
-    setMessages((prev) => [...prev, { role: 'user', text: userText }]);
-
-    if (textAgent.status !== 'connected') {
-      await textAgent.startSession({
-        agentId: process.env.NEXT_PUBLIC_TEXT_AGENT_ID,
-        connectionType: 'websocket',
-        overrides: {
-          conversation: { textOnly: true },
-        },
-      });
-    }
-
-    textAgent.sendUserMessage(userText);
-  }
-
-  /* ================= CALL ================= */
-  async function startCall() {
-    setIsCalling(true);
-    setMessages([]);
-
-    await navigator.mediaDevices.getUserMedia({ audio: true });
-
-    await voiceAgent.startSession({
-      agentId: process.env.NEXT_PUBLIC_VOICE_AGENT_ID,
-      connectionType: 'webrtc',
-    });
-  }
-
-  async function endCall() {
-    setIsCalling(false);
-    await voiceAgent.endSession();
-  }
-
-  /* ================= IMAGE ANALYSIS ================= */
-  async function analyzeAndSend() {
-    if (!image || !preview) return;
-
-    setLoading(true);
-
-    const img = new Image();
-    img.src = preview;
-    await new Promise((res) => (img.onload = res));
-
-    const result = await classifyPizza(img);
-
-    const verdict =
-      result.label.toLowerCase().includes('over')
-        ? 'FAIL (Overcooked Pizza)'
-        : 'PASS (Normal Pizza)';
-
-    const formData = new FormData();
-    formData.append('image', image);
-    formData.append('verdict', verdict);
-
-    await fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    });
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        role: 'agent',
-        text: `Thank you for sharing the image. Verdict: ${verdict}. Hamari quality team isse review kar rahi hai.`,
-      },
-    ]);
-
-    setImage(null);
-    setPreview(null);
-    setLoading(false);
-  }
+export default function LandingPage() {
+  const router = useRouter();
+  const [hoveredCard, setHoveredCard] = useState(null);
 
   return (
     <div style={styles.page}>
-      <div style={styles.card}>
-        {/* ================= CALL SCREEN ================= */}
-        {isCalling ? (
-          <div style={styles.callScreen}>
-            <div style={styles.callerName}>
-              Jay
-              <div style={styles.subText}>Domino’s Pizza Support</div>
-            </div>
+      {/* Background */}
+      <div style={styles.bgImageWrapper}>
+        <Image
+          src="/pizza-bg.jpg"
+          alt="Background"
+          fill
+          style={{ objectFit: 'cover' }}
+          priority
+        />
+      </div>
 
-            <div style={styles.callStatus}>On Call…</div>
+      {/* Gradient Overlay */}
+      <div style={styles.gradientOverlay}>
+        <div style={styles.circle1} />
+        <div style={styles.circle2} />
+        <div style={styles.circle3} />
+      </div>
 
-            <button style={styles.endCallBtn} onClick={endCall}>
-              End Call
+      {/* Main Content */}
+      <div style={styles.container}>
+        {/* Logo Header */}
+        <header style={styles.logoHeader}>
+          <Image
+            src="/dominos-logo.png"
+            alt="Domino's"
+            width={200}
+            height={62}
+            style={{ objectFit: 'contain', width: 'auto', height: 'auto' }}
+            priority
+          />
+          <p style={styles.tagline}>Voice Bot Services</p>
+        </header>
+
+        {/* Welcome Section */}
+        <div style={styles.welcomeCard}>
+          <h1 style={styles.welcomeTitle}>Welcome! 👋</h1>
+          <p style={styles.welcomeText}>Select a service to get started with our AI-powered voice assistants</p>
+        </div>
+
+        {/* Service Cards Grid */}
+        <div style={styles.cardsGrid}>
+          {services.map((service) => (
+            <button
+              key={service.id}
+              style={{
+                ...styles.serviceCard,
+                ...(hoveredCard === service.id ? styles.serviceCardHover : {}),
+              }}
+              onMouseEnter={() => setHoveredCard(service.id)}
+              onMouseLeave={() => setHoveredCard(null)}
+              onClick={() => router.push(service.path)}
+            >
+              <div style={{ ...styles.iconWrapper, background: service.gradient }}>
+                <service.icon size={32} />
+              </div>
+              <div style={styles.cardContent}>
+                <h3 style={styles.cardTitle}>{service.title}</h3>
+                <p style={styles.cardDescription}>{service.description}</p>
+              </div>
+              <div style={{ ...styles.arrowWrapper, background: hoveredCard === service.id ? service.gradient : '#f1f5f9' }}>
+                <ArrowIcon size={18} />
+              </div>
             </button>
-          </div>
-        ) : (
-          <>
-            {/* ================= HEADER ================= */}
-            <div style={styles.header}>
-              <strong>Domino’s Support</strong>
-              <button style={styles.callBtn} onClick={startCall}>
-                Call
-              </button>
-            </div>
+          ))}
+        </div>
 
-            {/* ================= CHAT ================= */}
-            <div style={styles.chat}>
-              {messages.map((m, i) => (
-                <div
-                  key={i}
-                  style={{
-                    ...styles.bubble,
-                    alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
-                    background: m.role === 'user' ? '#111827' : '#e5e7eb',
-                    color: m.role === 'user' ? '#fff' : '#000',
-                  }}
-                >
-                  {m.text}
-                </div>
-              ))}
-            </div>
-
-            {/* ================= IMAGE UPLOAD ================= */}
-            <div style={{ padding: 12 }}>
-              <input
-                type="file"
-                accept="image/*"
-                disabled={loading}
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  if (!file) return;
-                  setImage(file);
-                  setPreview(URL.createObjectURL(file));
-                }}
-              />
-
-              {preview && (
-                <>
-                  <img
-                    src={preview}
-                    alt="Pizza Preview"
-                    style={{ width: 180, marginTop: 8, borderRadius: 8 }}
-                  />
-                  <button
-                    style={{ marginTop: 8 }}
-                    onClick={analyzeAndSend}
-                    disabled={loading}
-                  >
-                    {loading ? 'Analyzing...' : 'Upload & Verify'}
-                  </button>
-                </>
-              )}
-            </div>
-
-            {/* ================= INPUT ================= */}
-            <div style={styles.inputBar}>
-              <input
-                value={text}
-                placeholder="Type your message..."
-                onChange={(e) => setText(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && sendText()}
-                style={styles.input}
-              />
-              <button style={styles.sendBtn} onClick={sendText}>
-                Send
-              </button>
-            </div>
-          </>
-        )}
+        {/* Footer */}
+        <footer style={styles.footer}>
+          <span>📞 1800-208-1234</span>
+          <span style={styles.footerDot}>•</span>
+          <span>24/7 Support</span>
+        </footer>
       </div>
     </div>
   );
 }
 
 /* ================= STYLES ================= */
-
 const styles = {
   page: {
     minHeight: '100vh',
-    background: '#eaf6ff',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 'clamp(16px, 4vw, 32px)',
+    position: 'relative',
+    overflow: 'hidden',
+    fontFamily: "'Nunito', 'Rubik', sans-serif",
   },
 
-  card: {
-    width: 420,
-    height: 560,
-    background: '#fff',
-    borderRadius: 14,
+  bgImageWrapper: {
+    position: 'fixed',
+    inset: 0,
+    zIndex: 0,
+  },
+
+  gradientOverlay: {
+    position: 'fixed',
+    inset: 0,
+    zIndex: 1,
+    background: `linear-gradient(
+      135deg,
+      rgba(0, 100, 145, 0.97) 0%,
+      rgba(0, 85, 125, 0.98) 50%,
+      rgba(0, 65, 100, 0.99) 100%
+    )`,
+  },
+
+  circle1: {
+    position: 'absolute',
+    width: '600px',
+    height: '600px',
+    borderRadius: '50%',
+    background: 'radial-gradient(circle, rgba(227, 24, 55, 0.2) 0%, transparent 70%)',
+    top: '-200px',
+    right: '-100px',
+    animation: 'float 8s ease-in-out infinite',
+  },
+
+  circle2: {
+    position: 'absolute',
+    width: '400px',
+    height: '400px',
+    borderRadius: '50%',
+    background: 'radial-gradient(circle, rgba(0, 150, 200, 0.3) 0%, transparent 70%)',
+    bottom: '-100px',
+    left: '-50px',
+    animation: 'float 10s ease-in-out infinite reverse',
+  },
+
+  circle3: {
+    position: 'absolute',
+    width: '350px',
+    height: '350px',
+    borderRadius: '50%',
+    background: 'radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%)',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    animation: 'float 12s ease-in-out infinite',
+  },
+
+  container: {
+    width: '100%',
+    maxWidth: 'min(500px, 94vw)',
     display: 'flex',
     flexDirection: 'column',
-    overflow: 'hidden',
+    gap: 20,
+    position: 'relative',
+    zIndex: 2,
   },
 
-  header: {
-    padding: 16,
-    borderBottom: '1px solid #eee',
+  logoHeader: {
     display: 'flex',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     alignItems: 'center',
+    gap: 8,
+    filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.2))',
   },
 
-  callBtn: {
-    padding: '8px 18px',
+  tagline: {
+    color: '#fff',
+    fontSize: 'clamp(14px, 3.5vw, 18px)',
+    fontWeight: 800,
+    textTransform: 'uppercase',
+    letterSpacing: '4px',
+    textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+  },
+
+  welcomeCard: {
+    background: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 20,
+    padding: 'clamp(20px, 5vw, 28px)',
+    textAlign: 'center',
+    boxShadow: '0 20px 40px rgba(0, 60, 100, 0.2)',
+  },
+
+  welcomeTitle: {
+    fontSize: 'clamp(26px, 6vw, 32px)',
+    fontWeight: 900,
+    color: '#1e293b',
+    marginBottom: 8,
+  },
+
+  welcomeText: {
+    fontSize: 'clamp(14px, 3.5vw, 16px)',
+    fontWeight: 600,
+    color: '#64748b',
+    lineHeight: 1.5,
+  },
+
+  cardsGrid: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 14,
+  },
+
+  serviceCard: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 16,
+    padding: 'clamp(16px, 4vw, 20px)',
+    background: 'rgba(255, 255, 255, 0.98)',
     borderRadius: 20,
     border: 'none',
-    background: '#dc2626',
-    color: '#fff',
-    fontWeight: 600,
     cursor: 'pointer',
+    boxShadow: '0 8px 30px rgba(0, 60, 100, 0.15)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    textAlign: 'left',
+    width: '100%',
   },
 
-  chat: {
-    flex: 1,
-    padding: 16,
-    overflowY: 'auto',
+  serviceCardHover: {
+    transform: 'translateY(-4px) scale(1.02)',
+    boxShadow: '0 20px 50px rgba(0, 60, 100, 0.25)',
+  },
+
+  iconWrapper: {
+    width: 60,
+    height: 60,
+    borderRadius: 16,
     display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-    background: '#fafafa',
-  },
-
-  bubble: {
-    maxWidth: '70%',
-    padding: '10px 14px',
-    borderRadius: 12,
-    fontSize: 14,
-  },
-
-  inputBar: {
-    padding: 12,
-    borderTop: '1px solid #eee',
-    display: 'flex',
-    gap: 8,
-  },
-
-  input: {
-    flex: 1,
-    padding: 10,
-    borderRadius: 8,
-    border: '1px solid #ccc',
-  },
-
-  sendBtn: {
-    padding: '0 16px',
-    borderRadius: 8,
-    border: 'none',
-    background: '#111827',
-    color: '#fff',
-    cursor: 'pointer',
-  },
-
-  callScreen: {
-    flex: 1,
-    background: '#e5e7eb',
-    display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '60px 20px',
-  },
-
-  callerName: {
-    fontSize: 22,
-    fontWeight: 600,
-    textAlign: 'center',
-  },
-
-  subText: {
-    fontSize: 14,
-    color: '#555',
-    marginTop: 6,
-  },
-
-  callStatus: {
-    fontSize: 16,
-    color: '#444',
-  },
-
-  endCallBtn: {
-    width: 80,
-    height: 80,
-    borderRadius: '50%',
-    background: '#dc2626',
+    justifyContent: 'center',
     color: '#fff',
-    border: 'none',
-    fontWeight: 600,
-    cursor: 'pointer',
+    flexShrink: 0,
+    boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
   },
+
+  cardContent: {
+    flex: 1,
+    minWidth: 0,
+  },
+
+  cardTitle: {
+    fontSize: 'clamp(16px, 4vw, 18px)',
+    fontWeight: 800,
+    color: '#1e293b',
+    marginBottom: 4,
+    fontFamily: "'Nunito', sans-serif",
+  },
+
+  cardDescription: {
+    fontSize: 'clamp(12px, 3vw, 14px)',
+    fontWeight: 600,
+    color: '#64748b',
+    lineHeight: 1.4,
+  },
+
+  arrowWrapper: {
+    width: 40,
+    height: 40,
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#64748b',
+    flexShrink: 0,
+    transition: 'all 0.3s ease',
+  },
+
+  footer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    padding: 'clamp(14px, 3.5vw, 18px)',
+    background: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 16,
+    boxShadow: '0 4px 20px rgba(0,100,145,0.2)',
+    backdropFilter: 'blur(10px)',
+    color: '#1e293b',
+    fontSize: 'clamp(13px, 3.2vw, 15px)',
+    fontWeight: 700,
+  },
+
+  footerDot: { color: '#E31837' },
 };
